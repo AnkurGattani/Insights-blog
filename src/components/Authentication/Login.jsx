@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Login as authLogin } from '../../store/slices/authSlice'
+import { login as authLogin } from '../../store/slices/authSlice'
 import { Button, Input } from '../index'
 import { useDispatch } from 'react-redux'
 import authService from '../../services/auth'
@@ -53,7 +53,7 @@ function Login() {
 						type='email'
 						name='email'
 						placeholder='Enter your email...'
-						{...register('email', { 
+						{...register('email', {
 							required: true
 							// Can add regex for email validation using validate
 						})}
@@ -82,7 +82,7 @@ function Login() {
 
 				<p className='mt-4 text-center text-base text-[#475569]'>
 					Don&apos;t have an account yet?&nbsp;
-					<Link 
+					<Link
 						to='/signup'
 						className='font-bold hover:underline text-black'
 					>

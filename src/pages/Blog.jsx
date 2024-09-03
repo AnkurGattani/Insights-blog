@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import storageService from '../services/storage'
-import { parse } from 'html-react-parser'
+import parse from 'html-react-parser'
 import authService from '../services/auth'
 import { Button } from '../components'
 import { useParams, useNavigate, Link } from 'react-router-dom'

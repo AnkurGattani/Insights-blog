@@ -108,7 +108,7 @@ function PostForm({ post }) {
           type='file'
           name='image'
           className='mb-4'
-          {...register('image'), { required: !post }} // if it's a new post, the image is required
+          {...register('image', { required: !post })} // if it's a new post, the image is required
         />
 
         {post && (
