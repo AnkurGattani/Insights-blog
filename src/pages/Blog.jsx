@@ -67,7 +67,7 @@ function Blog() {
 					user && user === post.userID && (
 						<div className='my-4 flex'>
 							<Button>
-								<Link to={`/edit/${slug}`}>Edit Post</Link>
+								<Link to={`/blogs/${slug}/edit`}>Edit Post</Link>
 							</Button>
 							<Button className='bg-red-500' onClick={async () => {
 								const response = await storageService.deletePost(slug);

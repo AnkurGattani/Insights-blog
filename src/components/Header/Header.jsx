@@ -38,8 +38,8 @@ function Header() {
       display: authStatus
     },
     {
-      name: 'Profile',
-      slug: '/profile',
+      name: 'My Insights',
+      slug: '/my-blogs',
       display: authStatus
     }
   ];

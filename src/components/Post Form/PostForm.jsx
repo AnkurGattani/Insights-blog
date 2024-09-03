@@ -33,7 +33,7 @@ function PostForm({ post }) {
       });
 
       if (updatedPost) {
-        navigate(`/post/${updatedPost.$id}`);  // redirect to the updated post
+        navigate(`/blogs/${updatedPost.$id}`);  // redirect to the updated post
       }
 
     } else { // if post is not available, then it's a new post
@@ -47,7 +47,7 @@ function PostForm({ post }) {
         const newPost = await storageService.createPost({ ...data, userID: userData.$id });  // create a new post with the data
 
         if (newPost) {
-          navigate(`/post/${newPost.$id}`);
+          navigate(`/blogs/${newPost.$id}`);
         }
       }
     }
