@@ -15,7 +15,7 @@ class StorageService {
 	}
 
 	// crete a new blog post
-	async createPost({title, slug, content, featuredImage, status, userID}) {
+	async createPost({ title, slug, content, featuredImage, status, userID, author }) {
 		try {
 			return await this.databases.createDocument(
 				conf.appwriteDatabaseID,	// database ID
@@ -25,8 +25,9 @@ class StorageService {
 					title,
 					content,
 					featuredImage,
-					status,	
-					userID
+					status,
+					userID,
+					author
 				}
 			)
 		} catch (error) {
@@ -35,7 +36,7 @@ class StorageService {
 	}
 
 	// update an existing blog post using slug (document ID)
-	async updatePost(slug, {title, content, featuredImage, status}) {
+	async updatePost(slug, { title, content, featuredImage, status }) {
 		try {
 			return await this.databases.updateDocument(
 				conf.appwriteDatabaseID,	// database ID
@@ -71,12 +72,11 @@ class StorageService {
 	// get a blog post using slug (document ID)
 	async getPost(slug) {
 		try {
-			await this.databases.getDocument(
+			return await this.databases.getDocument(
 				conf.appwriteDatabaseID,	// database ID
 				conf.appwriteCollectionID,	// collection ID
 				slug	// document ID
 			)
-			return true;
 		} catch (error) {
 			console.log("Error in Services :: getPost : ", error);
 			return false;
@@ -115,8 +115,8 @@ class StorageService {
 	async deleteFile(fileID) {
 		try {
 			await this.bucket.deleteFile(
-			conf.appwriteBucketID,	// bucket ID
-			fileID	// file ID
+				conf.appwriteBucketID,	// bucket ID
+				fileID	// file ID
 			);
 			return true;
 		} catch (error) {
