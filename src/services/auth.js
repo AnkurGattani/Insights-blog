@@ -7,18 +7,18 @@ class AuthService {
 
 	constructor() {
 		this.client
-					.setEndpoint(conf.appwriteURL)
-					.setProject(conf.appwriteProjectID);
+			.setEndpoint(conf.appwriteURL)
+			.setProject(conf.appwriteProjectID);
 		this.account = new Account(this.client);
 	}
 
-	async signUp({email, password, name}) {
+	async signUp({ email, password, name }) {
 		try {
 			const userAccount = await this.account.create(ID.unique(), email, password, name);
 
-			if(userAccount) {
+			if (userAccount) {
 				// if user account is created successfully, call logIn method to create the user session
-				return this.login({email, password});
+				return this.login({ email, password });
 
 			}
 			else {
@@ -30,10 +30,9 @@ class AuthService {
 		}
 	}
 
-	async login({email, password}) {
+	async login({ email, password }) {
 		try {
-			return await this.account.createEmailSession(email, password);
-			
+			return await this.account.createEmailPasswordSession(email, password);
 		} catch (error) {
 			console.log('Error in Services :: logIn : ', error);
 		}
