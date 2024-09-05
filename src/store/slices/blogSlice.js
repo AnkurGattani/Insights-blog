@@ -15,9 +15,12 @@ const blogSlice = createSlice({
 			state.blogs.push(action.payload);
 		},
 		updateBlog: (state, action) => {
-			const index = state.blogs.findIndex(blog => blog.slug === action.payload.slug);
+			const index = state.blogs.findIndex(blog => blog.$id === action.payload.$id);
 			if (index !== -1) {
 				state.blogs[index] = action.payload;
+			} else {
+				addBlog(state, action);	// add the new blog
+				deleteBlog(state, action);	// delete the old blog
 			}
 		},
 		deleteBlog: (state, action) => {

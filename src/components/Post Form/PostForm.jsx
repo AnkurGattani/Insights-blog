@@ -3,14 +3,16 @@ import { useForm } from 'react-hook-form'
 import { Button, Input, RTE } from '../index'
 import storageService from '../../services/storage'
 import { useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { updateBlog, addBlog } from '../../store/slices/blogSlice'
 
 function PostForm({ post }) {
+  // console.log("Post from PostForm: ",post);
   const { register, handleSubmit, watch, setValue, control, getValues } = useForm(
     {
       defaultValues: {
         title: post?.title || '',
-        slug: post?.slug || '',
+        slug: post?.$id || '',
         content: post?.content || '',
         status: post?.status || 'draft',
       }
@@ -18,10 +20,13 @@ function PostForm({ post }) {
   );
   const navigate = useNavigate();
   const userData = useSelector((state) => state.auth.userData);
+  const dispatch = useDispatch();
+  const author = userData.name;
 
   const submit = async (data) => { // data contains the new/updated form data
+    console.log("Data from PostForm: ", data);
     if (post) {
-      const imageFile = data.image[0] ? storageService.uploadFile(data.image[0]) : null;  // upload the new image
+      const imageFile = data.image[0] ? await storageService.uploadFile(data.image[0]) : null;  // upload the new image
 
       if (imageFile) {
         storageService.deleteFile(post.featuredImage);  // delete the old image
@@ -32,7 +37,10 @@ function PostForm({ post }) {
         featuredImage: imageFile ? imageFile.$id : undefined  // this needs to be overwritten with the new image ID because we changed the image above
       });
 
+      console.log("Updated Post from PostForm: ", updatedPost);
+
       if (updatedPost) {
+        dispatch(updateBlog(updatedPost));  // update the post in the redux store
         navigate(`/blogs/${updatedPost.$id}`);  // redirect to the updated post
       }
 
@@ -44,9 +52,10 @@ function PostForm({ post }) {
         const imageID = imageFile.$id;
         data.featuredImage = imageID;  // add the image ID to the form data
 
-        const newPost = await storageService.createPost({ ...data, userID: userData.$id });  // create a new post with the data
+        const newPost = await storageService.createPost({ ...data, userID: userData.$id, author: author });  // create a new post with the data
 
         if (newPost) {
+          dispatch(addBlog(newPost));  // add the new post to the redux store
           navigate(`/blogs/${newPost.$id}`);
         }
       }
@@ -88,6 +97,7 @@ function PostForm({ post }) {
           name='slug'
           placeholder='Slug will be generated automatically...'
           className='mb-4'
+          disabled
           {...register('slug', { required: true })}
           onInput={(e) => {
             setValue('slug', slugTransform(e.currentTarget.value), { shouldValidate: true });
@@ -123,10 +133,10 @@ function PostForm({ post }) {
           </div>
         )}
 
-        <select name='status' label='status' className='px-3 py-2 rounded-lg bg-white text-black outline-none focus:bg-gray-50 duration-200 border border-gray-200 w-full' >
+        <label className='block mb-1 pl-1 text-sm font-medium' htmlFor='status'> Status: </label>
+        <select name='status' label='status' className='px-3 py-2 rounded-lg bg-white text-black outline-none focus:bg-gray-50 duration-200 border border-gray-200 w-full' {...register('status', { required: true })} >
           <option value='draft'>Draft</option>
           <option value='published'>Published</option>
-          {...register('status', { required: true })}
         </select>
 
         <Button type='submit' className='w-full mt-4'>
