@@ -22,6 +22,7 @@ function Header() {
       .then(() => {
         dispatch(logout());
         navigate('/');
+        setIsOpen(false);
       })
       .catch((error) =>
         console.log('Error in Header :: logoutHandler : ', error));
@@ -121,17 +122,17 @@ function Header() {
             </Button>
           ) : (
             <div>
-              <Button className='w-full mb-2'>
-                <Link to="/login">
+              <Link to="/login" >
+                <Button className='w-full mb-2' onClick={() => setIsOpen(false)} >
                   Log In
-                </Link>
-              </Button>
+                </Button>
+              </Link>
 
-              <Button className='w-full'>
-                <Link to="/signup">
+              <Link to="/signup">
+                <Button className='w-full' onClick={() => setIsOpen(false)} >
                   Sign Up
-                </Link>
-              </Button>
+                </Button>
+              </Link>
             </div>
           )}
         </ul>
