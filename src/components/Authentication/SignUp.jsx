@@ -5,6 +5,7 @@ import { login } from '../../store/slices/authSlice'
 import { Button, Input } from '../index'
 import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
+import LogoLight from '../../assets/LogoLight.png'
 
 
 function SignUp() {
@@ -26,16 +27,15 @@ function SignUp() {
 			}
 		} catch (error) {
 			console.log('Error in SignUp :: onSubmit : ', error);
-			setError('Invalid email or password');
+			setError(error.message);
 
 		}
 	}
 
 	return (
-		<div className='w-full h-full p-12  flex flex-col items-center justify-center gap-y-12 overflow-hidden rounded-xl border border-gray-400 '>
-			<div className='w-24 block align-middle'>
-				!nsights
-				{/*  Logo */}
+		<div className='w-full h-full p-12  flex flex-col items-center justify-center gap-y-8 overflow-hidden rounded-xl border border-gray-400 '>
+			<div className='w-auto block align-middle'>
+				<img src={LogoLight} alt="logo" className='h-12 mt-2' />
 			</div>
 
 			<div className='w-full ml-0 flex flex-col items-center justify-center gap-y-6 overflow-visible '>
@@ -47,7 +47,7 @@ function SignUp() {
 					Please enter your details to signup.
 				</span>
 
-				<form onSubmit={handleSubmit(onSignUp)} className='mt-8' >
+				<form onSubmit={handleSubmit(onSignUp)} className='w-full mt-6' >
 					<Input
 						label='Full Name'
 						name='name'

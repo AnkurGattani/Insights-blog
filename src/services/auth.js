@@ -27,6 +27,7 @@ class AuthService {
 			}
 		} catch (error) {
 			console.log('Error in Services :: signUp : ', error);
+			throw error;
 		}
 	}
 
@@ -35,6 +36,7 @@ class AuthService {
 			return await this.account.createEmailPasswordSession(email, password);
 		} catch (error) {
 			console.log('Error in Services :: logIn : ', error);
+			throw error;
 		}
 	}
 

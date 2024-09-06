@@ -5,6 +5,7 @@ import { Button, Input } from '../index'
 import { useDispatch } from 'react-redux'
 import authService from '../../services/auth'
 import { useForm } from 'react-hook-form'
+import LogoLight from '../../assets/LogoLight.png'
 
 
 function Login() {
@@ -32,10 +33,9 @@ function Login() {
 	}
 
 	return (
-		<div className='w-full h-full p-12  flex flex-col items-center justify-center gap-y-12 overflow-hidden rounded-xl border border-gray-400 '>
-			<div className='w-24 block align-middle'>
-				!nsights
-				{/*  Logo */}
+		<div className='w-full h-full p-12  flex flex-col items-center justify-center gap-y-8 overflow-hidden rounded-xl border border-gray-400 '>
+			<div className='w-auto block align-middle'>
+				<img src={LogoLight} alt="logo" className='h-12 mt-2' />
 			</div>
 
 			<div className='w-full ml-0 flex flex-col items-center justify-center gap-y-6 overflow-visible '>
@@ -47,7 +47,7 @@ function Login() {
 					Please enter your credentials to login.
 				</span>
 
-				<form onSubmit={handleSubmit(onLogin)} className='mt-8' >
+				<form onSubmit={handleSubmit(onLogin)} className='w-full mt-6' >
 					<Input
 						label='Email Address'
 						type='email'
