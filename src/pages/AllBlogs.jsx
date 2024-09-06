@@ -39,7 +39,7 @@ function AllBlogs() {
 
 	return (
 		<div className='w-full min-h-[85vh] flex items-center justify-center'>
-			<div className='w-full flex flex-wrap items-center justify-center gap-6 p-6'>
+			<div className='w-full flex flex-wrap items-center justify-center gap-12 p-6'>
 				{
 					loading ? (
 						<>
@@ -55,6 +55,7 @@ function AllBlogs() {
 									$id={post.$id}
 									title={post.title}
 									featuredImage={post.featuredImage}
+									content={post.content}
 									author={post.author}
 								/>
 							))
