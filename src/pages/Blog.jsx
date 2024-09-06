@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import storageService from '../services/storage'
 import parse from 'html-react-parser'
-import authService from '../services/auth'
 import { Button } from '../components'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { deleteBlog } from '../store/slices/blogSlice'
+// import authService from '../services/auth'	// for fetching current user from database(brute force)
 
 
 function Blog() {
 	const [post, setPost] = useState(null);
-	// const [user, setUser] = useState(null);
-	const slug = useParams();
+	const [loading, setLoading] = useState(true);
+	const { slug } = useParams();
 	console.log("slug from Blog Page: ", slug);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -23,15 +23,20 @@ function Blog() {
 				const response = await storageService.getPost(slug);
 				if (response) {
 					setPost(response);
+					setLoading(false);
+				} else {
+					setLoading(false);
 				}
 			} catch (error) {
 				console.log("Error in Blog Page :: fetchPost : ", error);
+				setLoading(false);
 			}
 		}
 		fetchPost();
 	}, []);
 
 	// fetch current user from database(brute force)
+	// const [user, setUser] = useState(null);
 	// useEffect(() => {
 	// 	async function fetchUser() {
 	// 		try {
@@ -49,52 +54,67 @@ function Blog() {
 	// fetch current user from redux store(optimized)
 	const user = useSelector((state) => state.auth.userData);
 
-	if (post) {
-		console.log("Post from Blog Page: ", post);
-		return (
-			<div className='w-full flex flex-col items-center justify-center'>
-				<h1 className='text-2xl font-bold mt-4'>
-					{post.title}
-				</h1>
-				<h3 className='text-xl mt-2'>Author: <strong> {post.userID} </strong></h3>
-				<img src={post.featuredImage} alt={post.title} className='w-[80%] h-[400px] object-cover mt-4'
-				/>
-				<p className='text-xl mt-2'>
-					{parse(post.content)}
-				</p>
 
+	return (
+		<div className='w-full min-h-[85vh] flex items-center justify-center'>
+			<div className=' min-h-[85vh] md:w-[90%] w-full flex flex-row items-center justify-center text-xl font-medium '>
 				{
-					user && user === post.userID && (
-						<div className='my-4 flex'>
-							<Button>
-								<Link to={`/blogs/${slug}/edit`}>Edit Post</Link>
-							</Button>
-							<Button className='bg-red-500' onClick={async () => {
-								const response = await storageService.deletePost(slug);
-								if (response) {
-									storageService.deleteFile(post.featuredImage);
-									dispatch(deleteBlog(slug));
-									navigate('/');
+					loading ? (
+						<>
+							<h1 className='text-2xl items-center justify-center'> Loading... </h1>
+						</>
+					) : (
+						post ? (
+							<div className='min-h-[85vh] md:w-[90%] w-full md:p-10 p-5 justify-center items-center flex flex-col gap-6' >
+								<h1 className=' font-bold md:text-3xl text-xl'>{post && post.title}</h1>
+								<p className='text-lg'>Author: {post && post.author}</p>
+
+								<img src={storageService.getFilePreview(post.featuredImage)} alt={post && post.title} className='md:w-[50%] w-[90%]' />
+								<p className='text-pretty font-normal'>{post && parse(post.content)}</p>
+
+								{
+									user && user.$id === post.userID && (
+										<div className='my-4 flex gap-6'>
+											<Button>
+												<Link to={`/blogs/${slug}/edit`}>Edit Post</Link>
+											</Button>
+											<Button className='bg-red-500' onClick={async () => {
+												const response = await storageService.deletePost(slug);
+												if (response) {
+													storageService.deleteFile(post.featuredImage);
+													dispatch(deleteBlog(post.$id));
+													navigate('/');
+												}
+											}}>
+												Delete Post
+											</Button>
+										</div>
+									)
 								}
-							}}>
-								Delete Post
-							</Button>
-						</div>
+							</div>
+						) : (
+							<div className='w-[80%] flex flex-col items-center justify-center'>
+								<div className='text-2xl font-bold mb-6'>
+									<div className='w-full text-center'>
+										<strong>Oops! Error 404 - Insight not found! </strong>
+									</div>
+									<br />
+
+									Seems like the URL you entered is incorrect. Could you please re-check it and try again?
+								</div>
+								<Button>
+									<Link to="/">Go to Home</Link>
+								</Button>
+							</div>
+						)
 					)
 				}
 
+
 			</div>
-		)
-	} else {
-		return (
-			<div className='w-[80%] flex flex-col items-center justify-center'>
-				<div className='text-2xl font-bold'>It looks like the URL you entered might be incorrect. Could you please double-check it and try again?</div>
-				<Button>
-					<Link to="/">Go to Home</Link>
-				</Button>
-			</div>
-		)
-	}
+
+		</div>
+	)
 }
 
 export default Blog
