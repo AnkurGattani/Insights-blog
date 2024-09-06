@@ -10,11 +10,12 @@ function MyBlogs() {
 	const [loading, setLoading] = useState(true);
 
 	const user = useSelector(state => state.auth.userData);
+	console.log("User from MyBlogs: ", user);
 
 	useEffect(() => {
 		async function fetchMyPosts() {
 			try {
-				const response = await storageService.getAllPosts([Query.equal("userID", user)]);
+				const response = await storageService.getAllPosts([Query.equal("userID", user.$id)]);
 				if (response) {
 					setPosts(response.documents);
 				}
@@ -52,6 +53,7 @@ function MyBlogs() {
 									$id={post.$id}
 									title={post.title}
 									featuredImage={post.featuredImage}
+									content={post.content}
 									author={post.author}
 								/>
 							))
